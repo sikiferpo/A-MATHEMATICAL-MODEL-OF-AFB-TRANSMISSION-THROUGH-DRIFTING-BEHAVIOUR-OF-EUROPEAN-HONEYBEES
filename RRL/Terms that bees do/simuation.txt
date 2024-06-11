@@ -1,0 +1,57 @@
+METHOD RK4
+
+STARTTIME = 0
+STOPTIME = 100
+DT = 0.02
+
+p1 = 0.95
+L = 2000
+init oneHs = 10000
+init twoHs = 10000
+init oneHi = 0
+init twoHi = 0
+k1 = 10000
+f = 500
+b1 = 500
+alpha1 = .25
+sigma1 = 3
+init oneFs = 0
+init twoFs = 0
+init twooneFs = 0
+init onetwoFs = 0
+init oneFi = 0
+init twoFi = 0
+twooneFi = 0
+Beta = 0.0005
+oneDi = 0
+init oneDs = 0
+twoDs = 0
+init onetwoDs = 0
+dH = 0.1
+dF = 0.1
+mu1 = 0.14
+mu2 = 0.14
+muD = 1/90
+d12 = 0.1
+r1 = 0.1
+d21 = 0.1
+r2 = 0.1
+dhat21 =0.3
+dhat12 = 0.3
+rhat1 = 0.3
+rhat2 = 0.3
+
+d/dt(oneHs) = p1*L*((oneHs+oneHi)/(k1+oneHs+oneHi))*(f/(b1+f))-alpha1*(1-sigma1*((oneFs+oneFi)/(oneHs+oneHi+oneFs+oneFi)))*oneHs-oneHs*Beta*(oneHi+oneFi+twooneFi+oneDi)
+d/dt(twoHs) = p1*L*((twoHs+twoHi)/(k1+twoHs+twoHi))*(f/(b1+f))-alpha1*(1-sigma1*((oneFs+oneFi)/(twoHs+twoHi+oneFs+oneFi)))*twoHs-twoHs*Beta*(oneHi+oneFi+twooneFi+oneDi)
+d/dt(oneHi) = oneHs*Beta*(oneHi+oneFi+twooneFi)-alpha1*(1-sigma1*((oneFs+oneFi)/(oneHs+oneHi+oneFs+oneFi)))*oneHi-dH*oneHi
+d/dt(twoHi) = twoHs*Beta*(twoHi+twoFi+twooneFi)-alpha1*(1-sigma1*((twoFs+twoFi)/(twoHs+twoHi+twoFs+twoFi)))*twoHi-dH*twoHi
+d/dt(oneFs) = alpha1*(1-sigma1*((oneFs+oneFi)/(oneHs+oneHi+oneFs+oneFi))*oneHs-mu1*oneFs-d12*oneFs+r1*twooneFs-oneFs*Beta*(oneHi+oneFi+twooneFi))
+d/dt(onetwoFs) = (d21*twoFs)-(r2*onetwoFs)-(onetwoFs*(Beta*(oneHi+oneFi+twooneFi)))-((mu1/(mu1+r1)))*onetwoFs
+d/dt(twoFs) =  alpha1*(1-sigma1*((oneFs+oneFi)/(oneHs+oneHi+oneFs+oneFi))*twoHs-mu2*oneFs-d21*oneFs+r2*onetwoFs-twoFs*Beta*(twoHi+twoFi+twooneFi))
+d/dt(twooneFs) = (d21*twoFs)-(r1*twooneFs)-(twooneFs*(Beta*(twoHi+twoFi+twooneFi)))-((mu2/(mu2+r2)))*twooneFs
+d/dt(oneFi) = alpha1*(1-sigma1*((oneFs+oneFi)/(oneHs+oneHi+oneFs+oneFi))*oneHi-(mu1+dF)*oneFs-d12*oneFs+r1*twooneFs+oneFs*Beta*(oneHi+oneFi+twooneFi))
+d/dt(onetwoFs) = (d21*twoFs)-(r2*onetwoFs)+(onetwoFs*(Beta*(oneHi+oneFi+twooneFi)))-(((mu1+dF))/(mu1+r1+dF))*onetwoFs
+d/dt(twoFi) =  alpha1*(1-sigma1*((oneFs+oneFi)/(oneHs+oneHi+oneFs+oneFi))*twoHi-(mu2+dF)*oneFs-d21*oneFs+r2*onetwoFs+twoFs*Beta*(twoHi+twoFi+twooneFi))
+d/dt(twooneFs) = (d21*twoFs)-(r1*twooneFs)+(twooneFs*(Beta*(twoHi+twoFi+twooneFi)))-((mu2+dF)/(mu2+r2+dF))*twooneFs
+d/dt(oneDs) = (1-pi)*L*((oneHs+oneHi)/(k1+oneHs+oneHi))*(f/(b1+f))-oneDs*Beta*(oneHi+oneFi+twooneFi)-muD*oneDs
+d/dt(onetwoDs) = dhat21*twoDs-rhat2*onetwoDs-onetwoDs*Beta*(oneHi+oneFi+twooneFi)-(muD/(muD+rhat2))*twooneFs
